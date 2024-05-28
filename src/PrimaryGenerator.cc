@@ -41,6 +41,8 @@ double PrimaryGenerator::getTheoLifetime() const {
 void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
+  G4int Wich_gamma_energy = 1; //0 for 1275keV; 1 for colinear 511keV
+
   const double PI = 3.141592654;
    unsigned int seed1 = static_cast<unsigned int>(time(nullptr));
    seed1 ^= static_cast<unsigned int>(rand());
@@ -122,61 +124,45 @@ void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
 
   
   G4ThreeVector positionA(x0, y0, z0);
-  //int number = distribution(generator);
-  timeA =0. * ns;
-  // 
-  G4PrimaryVertex* vertexA = new G4PrimaryVertex(positionA, timeA);
   
+  G4PrimaryVertex* vertexA = new G4PrimaryVertex(positionA, 0);
+
+  G4ThreeVector positionB(x0, y0, z0);
+
+  G4PrimaryVertex* vertexB = new G4PrimaryVertex(positionB, 0);
+
   //particle 1 at vertex A
-  //
+  
   G4ParticleDefinition* particleDefinition
            = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-  G4PrimaryParticle* particle1 = new G4PrimaryParticle(particleDefinition);
-  particle1->SetMomentumDirection(vec_start);    
-  particle1->SetKineticEnergy(1.275*MeV);//   Na22 = 1.274*MeV
-  //
-  vertexA->SetPrimary(particle1);
-  event->AddPrimaryVertex(vertexA);
+  G4PrimaryParticle* particle1;
+  G4PrimaryParticle* particle2;
+  G4PrimaryParticle* particle3;
 
-  //vertex (B) symetric to vertex A
-  //
-    /*double roh = 2.7;
-    double Emax = 0.545;
-
-    double alpha = 17*(roh/Emax);  
-
-    
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::exponential_distribution<double> dist(alpha);
-
-    double randomNumber = dist(gen);
-
-    // 50/50 chance of positive or negative
-    std::uniform_int_distribution<int> signDist(0, 1);
-    int sign = (signDist(gen) == 0) ? -1 : 1;
-
-    double distribution511 = (randomNumber * sign);*/
-
-
-  G4ThreeVector positionB(x0, y0, z0);//distribution511*cm
-   
-  G4PrimaryVertex* vertexB = new G4PrimaryVertex(positionB, timeA);
-
-  //particles 2 and 3 at vertex B
-  //        
-  /*G4PrimaryParticle* particle2 = new G4PrimaryParticle(particleDefinition);
-  particle2->SetMomentumDirection(vec_stop);    
-  particle2->SetKineticEnergy(511.*keV);
-  //
- 
-  G4PrimaryParticle* particle3 = new G4PrimaryParticle(particleDefinition);
-  particle3->SetMomentumDirection(G4ThreeVector(-vec_stop));    
-  particle3->SetKineticEnergy(511*keV);
-  vertexB->SetPrimary(particle2);
-  vertexB->SetPrimary(particle3);  
-  event->AddPrimaryVertex(vertexB);*/
+  if(Wich_gamma_energy==0){
+    particle1 = new G4PrimaryParticle(particleDefinition);
+    particle1->SetMomentumDirection(vec_start);    
+    particle1->SetKineticEnergy(1.275*MeV);//   Na22 = 1.274*MeV
   
+    vertexA->SetPrimary(particle1);
+    event->AddPrimaryVertex(vertexA);
+  }
+  
+  
+  if(Wich_gamma_energy==1){
+    //vertex (B) symetric to vertex A
+    //particles 2 and 3 at vertex B       
+    particle2 = new G4PrimaryParticle(particleDefinition);
+    particle2->SetMomentumDirection(vec_stop);    
+    particle2->SetKineticEnergy(511.*keV);
+    
+    particle3 = new G4PrimaryParticle(particleDefinition);
+    particle3->SetMomentumDirection(G4ThreeVector(-vec_stop));    
+    particle3->SetKineticEnergy(511*keV);
+    vertexB->SetPrimary(particle2);
+    vertexB->SetPrimary(particle3);  
+    event->AddPrimaryVertex(vertexB);
+  }  
   
   G4AnalysisManager* AnalysisManager = G4AnalysisManager::Instance();
 
