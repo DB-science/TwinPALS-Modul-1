@@ -31,3 +31,7 @@
 <p style="font-size:16px;">Finally, in the <code>src</code> folder, in the file <code>RunAction.cc</code>, at line 92, you define the location and name of the binary data stream within the quotation marks. The file extension .stream should be retained.</p>
 
 ![Einstellungen_StreamSave](https://github.com/DB-science/TwinPALS-Modul-1/assets/102671948/bec4bd9d-340e-417e-bc34-89db6d73b1a1)
+
+# How to cite this Software? 
+<p style="font-size:16px;">You must cite the applied version of this software in your study.
+<p style="font-size:16px;">You can cite all versions by using the DOI 10.5281/zenodo.11448085. This DOI represents all versions, and will always resolve to the latest one
